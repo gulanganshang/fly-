@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neuedu.mapper.ArticleinfoMapper">
+	<insert id="addNewArticleinfo" parameterType="Articleinfo">
+	insert into Articleinfo(userid,title,content,type,paykiss)
+	values(#{userid},#{title},#{content},#{type},#{paykiss})
+	</insert>
+	<select id="checkIndexLoad" resultType="map">
+	SELECT art.id,userid,head_url,nickname,releasetime,typename,title,remarknum,visitnum,istop,isgood,isdone
+    FROM userinfo a
+    join articleinfo art
+    on a.id=art.userid
+    JOIN artcletype
+    ON art.type=artcletype.id
+    ORDER BY  releasetime desc
+	</select>
+	<select id="checkTopArt" resultType="map">
+	SELECT art.id,userid,head_url,nickname,releasetime,typename,title,remarknum,visitnum,istop,isgood,isdone
+    FROM userinfo a
+    join articleinfo art
+    on a.id=art.userid
+    JOIN artcletype
+    ON art.type=artcletype.id
+    ORDER BY  istop desc,isgood desc,releasetime desc
+    LIMIT 0,4
+	</select>
+	
+	<select id="getAllArt" resultType="map" parameterType="Page">
+	SELECT art.id,userid,head_url,nickname,releasetime,typename,title,remarknum,visitnum,istop,isgood,isdone
+     FROM userinfo a
+    join articleinfo art
+    on a.id=art.userid
+    JOIN artcletype
+    ON art.type=artcletype.id
+    ORDER BY  istop desc,isgood desc,releasetime desc
+    limit #{startwith},#{pageSize}
+	</select>
+	
+	<select id="getCount" resultType="int">
+	select count(*) from articleinfo
+	</select>
+	
+	<select id="getIndexArt" resultType="Map" parameterType="int">
+	select art.id,title,istop,isgood,remarknum,visitnum,userid,paykiss,releasetime,content,nickname,head_url
+    FROM userinfo u
+    JOIN articleinfo a
+    ON u.id=a.userid
+    JOIN artcletype art
+    ON art.id=a.type
+    WHERE a.id=#{id}
+	</select>
+	
+	<update id="updateVisitnum" parameterType="int">
+	update articleinfo
+	set visitnum=visitnum+1
+	where id=#{id}
+	</update>
+	<select id="checkHostArt" resultType="Map">
+	select title,id,remarknum,visitnum
+    from articleinfo
+    ORDER BY remarknum DESC,visitnum DESC
+    LIMIT 0,8
+	</select>
+</mapper>
