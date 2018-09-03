@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
@@ -30,4 +31,38 @@
     ON co.userid=u.id
     WHERE co.artorcommid=#{artorcommid}
 	</select>
+=======
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neuedu.mapper.CommentinfoMapper">	
+	<insert id="addComment" parameterType="Commentinfo">
+	insert into commentinfo(userid,artorcommid,content)
+	values(#{userid},#{artorcommid},#{content})
+	</insert>
+	<update id="updateCommNum" parameterType="Commentinfo">
+	    update articleinfo
+		set remarknum = remarknum + 1
+		where id = #{artorcommid}
+	</update>
+	<select id="chackRemark" resultType="Map">
+	select nickname,u.id,count(artorcommid) countnum,head_url
+    from userinfo u
+    JOIN commentinfo c
+    on u.id=c.userid
+    GROUP BY u.id
+    ORDER BY countnum DESC
+    LIMIT 0,12
+	
+	</select>
+	
+	<select id="chackReply" parameterType="int" resultType="Map">
+	select userid,artorcommid,remarktime,content,nickname,head_url,goodnum
+    FROM commentinfo co
+    JOIN userinfo u
+    ON co.userid=u.id
+    WHERE co.artorcommid=#{artorcommid}
+	</select>
+>>>>>>> branch 'master' of https://github.com/gulanganshang/fly-.git
 </mapper>
