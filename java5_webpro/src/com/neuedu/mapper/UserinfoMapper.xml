@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neuedu.mapper.UserinfoMapper">
+	<select id="checkEmailExists" resultType="int" parameterType="String">
+		select count(*) 
+		from userinfo
+		where email = #{email}
+	</select>
+	<insert id="addNewUserinfo" parameterType="Userinfo">
+		insert into userinfo(email,password,nickname)
+		values(#{email},#{password},#{nickname})
+	</insert>
+	<select id="checkLoginUser" parameterType="Userinfo" resultType="Userinfo">
+		select *
+		from userinfo
+		where email = #{email} and password = #{password}
+	</select>
+	<update id="updateUserKiss" parameterType="Userinfo">
+		update userinfo
+		set kissnum = #{kissnum}
+		where id = #{id}
+	</update>
+	<update id="updateHeadUrl" parameterType="Userinfo">
+		update userinfo
+		set head_url = #{head_url}
+		where id = #{id}
+	</update>
+</mapper>

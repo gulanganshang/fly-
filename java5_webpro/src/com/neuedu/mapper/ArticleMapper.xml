@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neuedu.mapper.ArticleMapper">
+	<select id="getArtType" resultType="Artcletype">
+		select *
+		from artcletype
+	</select>
+	<insert id="addArticle" parameterType="Articleinfo">
+		insert into articleinfo(title,userid,paykiss,type,topic_markdown_content,topic_html_content)
+		values (#{title},#{userid},#{paykiss},#{type},#{topic_markdown_content},#{topic_html_content})
+	</insert>
+	<select id="getAllArticle" resultType="map">
+		select a.id,head_url,nickname,releasetime,typename,title,remarknum,visitnum,istop,isgood,isdone
+		from articleinfo a
+		join userinfo u
+		on u.id = a.userid
+		join artcletype aty
+		on a.type = aty.id
+		order by releasetime desc
+		limit 0,10
+	</select>
+	<select id="getTopArticle" resultType="map" parameterType="int">
+		select a.id,head_url,nickname,releasetime,typename,title,remarknum,visitnum,istop,isgood,isdone
+		from articleinfo a
+		join userinfo u
+		on u.id = a.userid
+		join artcletype aty
+		on a.type = aty.id
+		where istop = 1 or isgood = 1
+		order by istop desc,isgood desc,releasetime desc
+		limit 0,#{num}
+	</select>
+	<select id="getIndexTopTen" resultType="map" parameterType="Page">
+		select a.id,head_url,nickname,releasetime,typename,title,remarknum,visitnum,istop,isgood,isdone
+		from articleinfo a
+		join userinfo u
+		on u.id = a.userid
+		join artcletype aty
+		on a.type = aty.id
+		order by istop desc,isgood desc,releasetime desc
+		limit #{startwith},#{pageSize}
+	</select>
+	<select id="getArtTotalNum" resultType="int">
+		select count(*) from articleinfo
+	</select>
+	<select id="getArtDetail" parameterType="int" resultType="map">
+		select a.id,title,istop,isgood,isdone,remarknum,visitnum,nickname,head_url,paykiss,releasetime,topic_html_content,typename
+		from articleinfo a
+		join userinfo u
+		on a.userid = u.id
+		join artcletype aty
+		on a.type = aty.id
+		where a.id = #{id}
+	</select>
+	<update id="updateVisitNum" parameterType="int">
+		update articleinfo
+		set visitnum = visitnum + 1
+		where id = #{id}
+	</update>
+	
+</mapper>
